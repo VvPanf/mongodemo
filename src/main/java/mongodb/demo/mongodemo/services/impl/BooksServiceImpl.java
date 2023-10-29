@@ -3,7 +3,6 @@ package mongodb.demo.mongodemo.services.impl;
 import mongodb.demo.mongodemo.models.Book;
 import mongodb.demo.mongodemo.repos.BooksRepository;
 import mongodb.demo.mongodemo.services.BooksService;
-import mongodb.demo.mongodemo.utils.ClientErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -45,7 +44,7 @@ public class BooksServiceImpl implements BooksService {
     @Override
     public Book getBook(String id) {
         return booksRepo.findById(id)
-                .orElseThrow(()->new ClientErrorException.NotFoundException("Книга с id=[%s] не найдена", id));
+                .orElseThrow(() -> new RuntimeException("Книга с id=" + id + " не найдена"));
     }
     @Override
     public void deleteBook(String id) {
