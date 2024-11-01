@@ -16,9 +16,7 @@ a,
 }
 
 .content-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
   padding-top: 2rem;
 }
 

@@ -4,8 +4,16 @@
 </script>
 
 <template>
-  <main>
+  <main class="main">
     <UrlComponent/>
     <TableComponent/>
   </main>
 </template>
+
+<style>
+.main {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+</style>

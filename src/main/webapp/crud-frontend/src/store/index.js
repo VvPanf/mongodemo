@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const store = createStore({
     state: {
-        apiUrl: 'http://localhost:8080/',
+        apiUrl: new URL('http://localhost:8080/'),
+        book: null,
         books: [],
         isEmpty: false,
         totalPages: 0,
@@ -13,6 +14,9 @@ const store = createStore({
     getters: {
         getApiUrl(state) {
             return state.apiUrl;
+        },
+        getBook(state) {
+            return state.book;
         },
         getBooks(state) {
             return state.books;
@@ -33,6 +37,9 @@ const store = createStore({
     mutations: {
         saveApiUrl(state, payload) {
             state.apiUrl = payload;
+        },
+        setBook(state, payload) {
+            state.book = payload;
         },
         setBooks(state, payload) {
             state.books = payload;
@@ -73,6 +80,21 @@ const store = createStore({
                 console.log(error);
             });
         },
+        loadBookById(context, id) {
+            axios.get(context.getters.getApiUrl + '/' + id)
+            .then(r => {
+                if (r.data) {
+                    context.commit('setBook', r.data);
+                } else {
+                    alert('Запись не найдена');
+                    console.log(error);
+                }
+            })
+            .catch(error => {
+                alert('Запись не найдена');
+                console.log(error);
+            })
+        },
         saveBook(context, book) {
             axios.post(context.getters.getApiUrl, 
                 JSON.stringify(book), {
@@ -88,9 +110,23 @@ const store = createStore({
                 console.log(error);
             });
         },
+        updateBook(context, book) {
+            axios.put(context.getters.getApiUrl + '/' + book['id'], 
+                JSON.stringify(book), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(r => {
+                alert('Запись обновлена');
+            })
+            .catch(error => {
+                alert('Возникла ошибка');
+                console.log(error);
+            });
+        },
         deleteBook(context, id) {
-            let deleteUrl = new URL(id, context.getters.getApiUrl);
-            axios.delete(deleteUrl)
+            axios.delete(context.getters.getApiUrl + '/' + id)
             .then(
                 context.commit('setBooks', context.getters.getBooks.filter((item) => {
                     return Object.values(item)[0] !== id;

@@ -100,6 +100,10 @@
         text-decoration: underline;
     }
 
+    .pagination-limit {
+        text-align: center;
+    }
+
     .pagination-limit__input {
         max-width: 30px;
         margin-left: 10px;
