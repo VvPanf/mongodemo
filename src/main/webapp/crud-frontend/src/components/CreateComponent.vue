@@ -2,15 +2,13 @@
     <div v-if="Object.keys(headers).length !== 0">
         <section class="content-section">
             <div v-for="header in headers" class="input-line">
-                <label class="input-line__label">
-                    {{ header }}
-                    <button v-if="header == 'id'" :disabled="!('id' in values)" class="input-line__button" v-on:click="getBookById()">-></button>
-                </label>
-                <input type="text" v-model="values[header]">
+                <label class="input-line__label">{{ header }}</label>
+                <input v-if="header == 'id'" type="text" v-model="values[header]" disabled>
+                <input v-else type="text" v-model="values[header]">
             </div>
             <div class="input-buttons">
-                <button v-on:click="createBook()">Создать</button>
                 <button v-if="values['id']" v-on:click="updateBook()">Обновить</button>
+                <button v-else v-on:click="createBook()">Создать</button>
             </div>
         </section>
     </div>
@@ -28,6 +26,12 @@
         data() {
             return {
                 values: {}
+            }
+        },
+        created() {
+            let id = this.$route.query.id;
+            if (id) {
+                this.$store.dispatch('loadBookById', id);
             }
         },
         computed: {
@@ -48,9 +52,6 @@
             }
         },
         methods: {
-            getBookById() {
-                this.$store.dispatch('loadBookById', this.values['id']);
-            },
             createBook() {
                 this.$store.dispatch('saveBook', this.values);
             },
